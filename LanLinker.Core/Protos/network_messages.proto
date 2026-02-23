@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package core.network.messages;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "LanLinker.Core.Protos";
+
+message NetworkMessage {
+  MessageHeader header = 1;
+  oneof payload {
+    PeerDiscoveryMessage peer_discovery = 2;
+    PeerAnnouncementMessage peer_announcement = 3;
+    UserActivityMessage user_activity = 4;
+    HeartbeatMessage heartbeat = 5;
+  }
+}
+
+// sender_id / device_id : A globally unique identifier (GUID) generated once per app instance.
+// device_name           : The physical machine or OS name
+// user_name             : The custom display name manually set by the user in the UI.
+//
+// NOTE: To optimize network traffic, 'device_name' and 'user_name' are ONLY 
+// transmitted during PeerDiscovery and PeerAnnouncement. Subsequent messages
+// (like UserActivity) omit these fields and rely on 'sender_id' in the Header.
+
+message MessageHeader {
+  string message_id = 1;
+  string device_id = 2;
+  optional string recipient_device_id = 3;
+  MessageType message_type = 4;
+  google.protobuf.Timestamp timestamp = 5;
+}
+
+message PeerDiscoveryMessage {
+  string device_id = 1;
+  string device_name = 2;
+  string user_name = 3;
+  string network_interface = 4;
+  int32 port = 5;
+}
+
+message PeerAnnouncementMessage {
+  string device_id = 1;
+  string device_name = 2;
+  string user_name = 3;
+}
+
+message UserActivityMessage {
+  string user_message = 2;
+  map<string, string> metadata = 3;
+}
+
+message HeartbeatMessage {
+  google.protobuf.Timestamp timestamp = 1;
+}
+
+// ENUMS
+
+enum MessageType {
+  MESSAGE_TYPE_UNKNOWN = 0;
+  MESSAGE_TYPE_PEER_DISCOVERY = 1;
+  MESSAGE_TYPE_PEER_ANNOUNCEMENT = 2;
+  MESSAGE_TYPE_USER_ACTIVITY = 3;
+  MESSAGE_TYPE_HEARTBEAT = 4;
+}
