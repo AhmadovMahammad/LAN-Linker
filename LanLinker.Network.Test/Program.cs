@@ -15,7 +15,7 @@ internal abstract class Program
     {
         IUdpDiscoveryService discoveryService = new UdpDiscoveryService(DeviceId, DeviceName, UserName);
 
-        discoveryService.OnPeerDiscovered += peer => { Console.WriteLine($"New peer found.\n{peer}\n\n"); };
+        discoveryService.OnPeerDiscovered += peer => { Console.WriteLine($"\nNew peer found.\n{peer}\n\n"); };
 
         CancellationTokenSource cts = new CancellationTokenSource();
 

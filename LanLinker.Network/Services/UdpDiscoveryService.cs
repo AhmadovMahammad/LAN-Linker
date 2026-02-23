@@ -94,8 +94,7 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         {
             NetworkMessage networkMessage = NetworkMessage.Parser.ParseFrom(buffer);
 
-            // if (networkMessage.Header.DeviceId == Guid.Empty.ToString() || networkMessage.Header.DeviceId == deviceId)
-            if (networkMessage.Header.DeviceId == Guid.Empty.ToString())
+            if (networkMessage.Header.DeviceId == Guid.Empty.ToString() || networkMessage.Header.DeviceId == deviceId)
             {
                 return;
             }
