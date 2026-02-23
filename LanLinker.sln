@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanLinker.Core.Test", "LanL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanLinker.Network", "LanLinker.Network\LanLinker.Network.csproj", "{77108FD4-A046-4F27-B008-49D5D0386454}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanLinker.Network.Test", "LanLinker.Network.Test\LanLinker.Network.Test.csproj", "{328783E7-DE81-4C39-9569-CA832471EB0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{77108FD4-A046-4F27-B008-49D5D0386454}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77108FD4-A046-4F27-B008-49D5D0386454}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77108FD4-A046-4F27-B008-49D5D0386454}.Release|Any CPU.Build.0 = Release|Any CPU
+		{328783E7-DE81-4C39-9569-CA832471EB0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{328783E7-DE81-4C39-9569-CA832471EB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{328783E7-DE81-4C39-9569-CA832471EB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{328783E7-DE81-4C39-9569-CA832471EB0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
