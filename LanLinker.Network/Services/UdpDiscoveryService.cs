@@ -9,7 +9,8 @@ using LanLinker.Core.Protos;
 
 namespace LanLinker.Network.Services;
 
-public class UdpDiscoveryService(string deviceId, string deviceName, string userName, int port) : IUdpDiscoveryService
+public class UdpDiscoveryService(string deviceId, string deviceName, string userName, int port = 5000)
+    : IUdpDiscoveryService
 {
     private UdpClient? _udpListener;
     private UdpClient? _udpBroadcaster;
@@ -36,7 +37,7 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
     {
         _udpListener?.Dispose();
         _udpBroadcaster?.Dispose();
-        
+
         return Task.CompletedTask;
     }
 
@@ -53,9 +54,10 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
                 if (_udpBroadcaster != null)
                 {
                     await _udpBroadcaster.SendAsync(messageBytes, _broadcastEndpoint, cancellationToken);
+                    Console.WriteLine($"[{DateTime.UtcNow}] announcement message sent.");
                 }
 
-                await Task.Delay(AppSettings.AnnouncementIntervalSeconds, cancellationToken);
+                await Task.Delay(AppSettings.AnnouncementIntervalMilliSeconds, cancellationToken);
             }
         }
         catch (OperationCanceledException)
@@ -92,7 +94,8 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         {
             NetworkMessage networkMessage = NetworkMessage.Parser.ParseFrom(buffer);
 
-            if (networkMessage.Header.DeviceId == Guid.Empty.ToString() || networkMessage.Header.DeviceId == deviceId)
+            // if (networkMessage.Header.DeviceId == Guid.Empty.ToString() || networkMessage.Header.DeviceId == deviceId)
+            if (networkMessage.Header.DeviceId == Guid.Empty.ToString())
             {
                 return;
             }
