@@ -1,6 +1,6 @@
 namespace LanLinker.Core;
 
-public class AppSettings
+public abstract class AppSettings
 {
     public const int PeerTimeoutSeconds = 30;
 }
