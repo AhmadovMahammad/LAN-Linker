@@ -16,13 +16,13 @@ message NetworkMessage {
   }
 }
 
-// sender_id / device_id : A globally unique identifier (GUID) generated once per app instance.
+// device_id             : A globally unique identifier (GUID) generated once per app instance.
 // device_name           : The physical machine or OS name
 // user_name             : The custom display name manually set by the user in the UI.
 //
-// NOTE: To optimize network traffic, 'device_name' and 'user_name' are ONLY 
+// NOTE: To optimize network traffic, 'device_name' and 'user_name' are ONLY
 // transmitted during PeerDiscovery and PeerAnnouncement. Subsequent messages
-// (like UserActivity) omit these fields and rely on 'sender_id' in the Header.
+// (like UserActivity) omit these fields and rely on 'device_id' in the Header.
 
 message MessageHeader {
   string message_id = 1;
@@ -33,7 +33,6 @@ message MessageHeader {
 }
 
 message PeerDiscoveryMessage {
-  string device_id = 1;
   string device_name = 2;
   string user_name = 3;
   string network_interface = 4;
@@ -41,7 +40,6 @@ message PeerDiscoveryMessage {
 }
 
 message PeerAnnouncementMessage {
-  string device_id = 1;
   string device_name = 2;
   string user_name = 3;
 }

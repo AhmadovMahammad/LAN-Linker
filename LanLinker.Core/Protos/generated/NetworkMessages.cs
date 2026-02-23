@@ -38,29 +38,28 @@ namespace LanLinker.Core.Protos {
             "AiABKAkSIAoTcmVjaXBpZW50X2RldmljZV9pZBgDIAEoCUgAiAEBEjgKDG1l",
             "c3NhZ2VfdHlwZRgEIAEoDjIiLmNvcmUubmV0d29yay5tZXNzYWdlcy5NZXNz",
             "YWdlVHlwZRItCgl0aW1lc3RhbXAYBSABKAsyGi5nb29nbGUucHJvdG9idWYu",
-            "VGltZXN0YW1wQhYKFF9yZWNpcGllbnRfZGV2aWNlX2lkInoKFFBlZXJEaXNj",
-            "b3ZlcnlNZXNzYWdlEhEKCWRldmljZV9pZBgBIAEoCRITCgtkZXZpY2VfbmFt",
-            "ZRgCIAEoCRIRCgl1c2VyX25hbWUYAyABKAkSGQoRbmV0d29ya19pbnRlcmZh",
-            "Y2UYBCABKAkSDAoEcG9ydBgFIAEoBSJUChdQZWVyQW5ub3VuY2VtZW50TWVz",
-            "c2FnZRIRCglkZXZpY2VfaWQYASABKAkSEwoLZGV2aWNlX25hbWUYAiABKAkS",
-            "EQoJdXNlcl9uYW1lGAMgASgJIqgBChNVc2VyQWN0aXZpdHlNZXNzYWdlEhQK",
-            "DHVzZXJfbWVzc2FnZRgCIAEoCRJKCghtZXRhZGF0YRgDIAMoCzI4LmNvcmUu",
-            "bmV0d29yay5tZXNzYWdlcy5Vc2VyQWN0aXZpdHlNZXNzYWdlLk1ldGFkYXRh",
-            "RW50cnkaLwoNTWV0YWRhdGFFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUY",
-            "AiABKAk6AjgBIkEKEEhlYXJ0YmVhdE1lc3NhZ2USLQoJdGltZXN0YW1wGAEg",
-            "ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCqoAQoLTWVzc2FnZVR5",
-            "cGUSGAoUTUVTU0FHRV9UWVBFX1VOS05PV04QABIfChtNRVNTQUdFX1RZUEVf",
-            "UEVFUl9ESVNDT1ZFUlkQARIiCh5NRVNTQUdFX1RZUEVfUEVFUl9BTk5PVU5D",
-            "RU1FTlQQAhIeChpNRVNTQUdFX1RZUEVfVVNFUl9BQ1RJVklUWRADEhoKFk1F",
-            "U1NBR0VfVFlQRV9IRUFSVEJFQVQQBEIYqgIVTGFuTGlua2VyLkNvcmUuUHJv",
-            "dG9zYgZwcm90bzM="));
+            "VGltZXN0YW1wQhYKFF9yZWNpcGllbnRfZGV2aWNlX2lkImcKFFBlZXJEaXNj",
+            "b3ZlcnlNZXNzYWdlEhMKC2RldmljZV9uYW1lGAIgASgJEhEKCXVzZXJfbmFt",
+            "ZRgDIAEoCRIZChFuZXR3b3JrX2ludGVyZmFjZRgEIAEoCRIMCgRwb3J0GAUg",
+            "ASgFIkEKF1BlZXJBbm5vdW5jZW1lbnRNZXNzYWdlEhMKC2RldmljZV9uYW1l",
+            "GAIgASgJEhEKCXVzZXJfbmFtZRgDIAEoCSKoAQoTVXNlckFjdGl2aXR5TWVz",
+            "c2FnZRIUCgx1c2VyX21lc3NhZ2UYAiABKAkSSgoIbWV0YWRhdGEYAyADKAsy",
+            "OC5jb3JlLm5ldHdvcmsubWVzc2FnZXMuVXNlckFjdGl2aXR5TWVzc2FnZS5N",
+            "ZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0K",
+            "BXZhbHVlGAIgASgJOgI4ASJBChBIZWFydGJlYXRNZXNzYWdlEi0KCXRpbWVz",
+            "dGFtcBgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAqqAEKC01l",
+            "c3NhZ2VUeXBlEhgKFE1FU1NBR0VfVFlQRV9VTktOT1dOEAASHwobTUVTU0FH",
+            "RV9UWVBFX1BFRVJfRElTQ09WRVJZEAESIgoeTUVTU0FHRV9UWVBFX1BFRVJf",
+            "QU5OT1VOQ0VNRU5UEAISHgoaTUVTU0FHRV9UWVBFX1VTRVJfQUNUSVZJVFkQ",
+            "AxIaChZNRVNTQUdFX1RZUEVfSEVBUlRCRUFUEARCGKoCFUxhbkxpbmtlci5D",
+            "b3JlLlByb3Rvc2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::LanLinker.Core.Protos.MessageType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::LanLinker.Core.Protos.NetworkMessage), global::LanLinker.Core.Protos.NetworkMessage.Parser, new[]{ "Header", "PeerDiscovery", "PeerAnnouncement", "UserActivity", "Heartbeat" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LanLinker.Core.Protos.MessageHeader), global::LanLinker.Core.Protos.MessageHeader.Parser, new[]{ "MessageId", "DeviceId", "RecipientDeviceId", "MessageType", "Timestamp" }, new[]{ "RecipientDeviceId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::LanLinker.Core.Protos.PeerDiscoveryMessage), global::LanLinker.Core.Protos.PeerDiscoveryMessage.Parser, new[]{ "DeviceId", "DeviceName", "UserName", "NetworkInterface", "Port" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::LanLinker.Core.Protos.PeerAnnouncementMessage), global::LanLinker.Core.Protos.PeerAnnouncementMessage.Parser, new[]{ "DeviceId", "DeviceName", "UserName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::LanLinker.Core.Protos.PeerDiscoveryMessage), global::LanLinker.Core.Protos.PeerDiscoveryMessage.Parser, new[]{ "DeviceName", "UserName", "NetworkInterface", "Port" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::LanLinker.Core.Protos.PeerAnnouncementMessage), global::LanLinker.Core.Protos.PeerAnnouncementMessage.Parser, new[]{ "DeviceName", "UserName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::LanLinker.Core.Protos.UserActivityMessage), global::LanLinker.Core.Protos.UserActivityMessage.Parser, new[]{ "UserMessage", "Metadata" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::LanLinker.Core.Protos.HeartbeatMessage), global::LanLinker.Core.Protos.HeartbeatMessage.Parser, new[]{ "Timestamp" }, null, null, null, null)
           }));
@@ -909,7 +908,6 @@ namespace LanLinker.Core.Protos {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PeerDiscoveryMessage(PeerDiscoveryMessage other) : this() {
-      deviceId_ = other.deviceId_;
       deviceName_ = other.deviceName_;
       userName_ = other.userName_;
       networkInterface_ = other.networkInterface_;
@@ -921,18 +919,6 @@ namespace LanLinker.Core.Protos {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PeerDiscoveryMessage Clone() {
       return new PeerDiscoveryMessage(this);
-    }
-
-    /// <summary>Field number for the "device_id" field.</summary>
-    public const int DeviceIdFieldNumber = 1;
-    private string deviceId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string DeviceId {
-      get { return deviceId_; }
-      set {
-        deviceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
     }
 
     /// <summary>Field number for the "device_name" field.</summary>
@@ -998,7 +984,6 @@ namespace LanLinker.Core.Protos {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (DeviceId != other.DeviceId) return false;
       if (DeviceName != other.DeviceName) return false;
       if (UserName != other.UserName) return false;
       if (NetworkInterface != other.NetworkInterface) return false;
@@ -1010,7 +995,6 @@ namespace LanLinker.Core.Protos {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
       if (DeviceName.Length != 0) hash ^= DeviceName.GetHashCode();
       if (UserName.Length != 0) hash ^= UserName.GetHashCode();
       if (NetworkInterface.Length != 0) hash ^= NetworkInterface.GetHashCode();
@@ -1033,10 +1017,6 @@ namespace LanLinker.Core.Protos {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (DeviceId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(DeviceId);
-      }
       if (DeviceName.Length != 0) {
         output.WriteRawTag(18);
         output.WriteString(DeviceName);
@@ -1063,10 +1043,6 @@ namespace LanLinker.Core.Protos {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (DeviceId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(DeviceId);
-      }
       if (DeviceName.Length != 0) {
         output.WriteRawTag(18);
         output.WriteString(DeviceName);
@@ -1093,9 +1069,6 @@ namespace LanLinker.Core.Protos {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (DeviceId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceId);
-      }
       if (DeviceName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceName);
       }
@@ -1119,9 +1092,6 @@ namespace LanLinker.Core.Protos {
     public void MergeFrom(PeerDiscoveryMessage other) {
       if (other == null) {
         return;
-      }
-      if (other.DeviceId.Length != 0) {
-        DeviceId = other.DeviceId;
       }
       if (other.DeviceName.Length != 0) {
         DeviceName = other.DeviceName;
@@ -1150,10 +1120,6 @@ namespace LanLinker.Core.Protos {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 10: {
-            DeviceId = input.ReadString();
-            break;
-          }
           case 18: {
             DeviceName = input.ReadString();
             break;
@@ -1185,10 +1151,6 @@ namespace LanLinker.Core.Protos {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 10: {
-            DeviceId = input.ReadString();
-            break;
-          }
           case 18: {
             DeviceName = input.ReadString();
             break;
@@ -1246,7 +1208,6 @@ namespace LanLinker.Core.Protos {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PeerAnnouncementMessage(PeerAnnouncementMessage other) : this() {
-      deviceId_ = other.deviceId_;
       deviceName_ = other.deviceName_;
       userName_ = other.userName_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -1256,18 +1217,6 @@ namespace LanLinker.Core.Protos {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PeerAnnouncementMessage Clone() {
       return new PeerAnnouncementMessage(this);
-    }
-
-    /// <summary>Field number for the "device_id" field.</summary>
-    public const int DeviceIdFieldNumber = 1;
-    private string deviceId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string DeviceId {
-      get { return deviceId_; }
-      set {
-        deviceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
     }
 
     /// <summary>Field number for the "device_name" field.</summary>
@@ -1309,7 +1258,6 @@ namespace LanLinker.Core.Protos {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (DeviceId != other.DeviceId) return false;
       if (DeviceName != other.DeviceName) return false;
       if (UserName != other.UserName) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -1319,7 +1267,6 @@ namespace LanLinker.Core.Protos {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
       if (DeviceName.Length != 0) hash ^= DeviceName.GetHashCode();
       if (UserName.Length != 0) hash ^= UserName.GetHashCode();
       if (_unknownFields != null) {
@@ -1340,10 +1287,6 @@ namespace LanLinker.Core.Protos {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (DeviceId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(DeviceId);
-      }
       if (DeviceName.Length != 0) {
         output.WriteRawTag(18);
         output.WriteString(DeviceName);
@@ -1362,10 +1305,6 @@ namespace LanLinker.Core.Protos {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (DeviceId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(DeviceId);
-      }
       if (DeviceName.Length != 0) {
         output.WriteRawTag(18);
         output.WriteString(DeviceName);
@@ -1384,9 +1323,6 @@ namespace LanLinker.Core.Protos {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (DeviceId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceId);
-      }
       if (DeviceName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceName);
       }
@@ -1404,9 +1340,6 @@ namespace LanLinker.Core.Protos {
     public void MergeFrom(PeerAnnouncementMessage other) {
       if (other == null) {
         return;
-      }
-      if (other.DeviceId.Length != 0) {
-        DeviceId = other.DeviceId;
       }
       if (other.DeviceName.Length != 0) {
         DeviceName = other.DeviceName;
@@ -1429,10 +1362,6 @@ namespace LanLinker.Core.Protos {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 10: {
-            DeviceId = input.ReadString();
-            break;
-          }
           case 18: {
             DeviceName = input.ReadString();
             break;
@@ -1456,10 +1385,6 @@ namespace LanLinker.Core.Protos {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 10: {
-            DeviceId = input.ReadString();
-            break;
-          }
           case 18: {
             DeviceName = input.ReadString();
             break;

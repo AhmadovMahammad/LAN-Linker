@@ -46,6 +46,7 @@ internal abstract class Program
 
         if (receivedMessage == null)
         {
+            Console.WriteLine("Could not parse network message.");
             return;
         }
 
