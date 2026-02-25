@@ -6,8 +6,7 @@ public interface IUdpDiscoveryService
 {
     Task StartAsync(CancellationToken cancellationToken);
     Task StopAsync(CancellationToken cancellationToken);
-    Task DiscoverPeersAsync();
-    Task AnnouncePresenceAsync();
 
     event Action<Peer> OnPeerDiscovered;
+    event Action<Exception> OnCriticalError;
 }

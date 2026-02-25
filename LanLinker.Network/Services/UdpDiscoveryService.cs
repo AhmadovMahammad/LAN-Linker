@@ -66,6 +66,7 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         catch (Exception e)
         {
             Console.WriteLine($"[UDP Broadcaster Error] {e.Message}");
+            OnCriticalError?.Invoke(e);
         }
     }
 
@@ -75,16 +76,23 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                if (_udpListener != null)
+                if (_udpListener == null)
                 {
-                    UdpReceiveResult udpReceiveResult = await _udpListener.ReceiveAsync(cancellationToken);
-                    HandleReceivedBytes(udpReceiveResult.Buffer, udpReceiveResult.RemoteEndPoint);
+                    continue;
                 }
+                
+                UdpReceiveResult udpReceiveResult = await _udpListener.ReceiveAsync(cancellationToken);
+                
+                HandleReceivedBytes(udpReceiveResult.Buffer, udpReceiveResult.RemoteEndPoint);
             }
+        }
+        catch (OperationCanceledException)
+        {
         }
         catch (Exception e)
         {
             Console.WriteLine($"[UDP Listener Error] {e.Message}");
+            OnCriticalError?.Invoke(e);
         }
     }
 
@@ -107,6 +115,7 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
                 {
                     DeviceId = networkMessage.Header.DeviceId,
                     DeviceName = payload.DeviceName,
+                    UserName = payload.UserName,
                     IpAddress = remoteEndPoint.Address.ToString(),
                     Port = port,
                     LastSeenAt = DateTime.UtcNow
@@ -119,16 +128,6 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         {
             Console.WriteLine($"[UDP Parse Error] Bad packet received: {e.Message}");
         }
-    }
-
-    public Task DiscoverPeersAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task AnnouncePresenceAsync()
-    {
-        return Task.CompletedTask;
     }
 
     private NetworkMessage CreateAnnouncementMessage()
@@ -152,4 +151,5 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
     }
 
     public event Action<Peer>? OnPeerDiscovered;
+    public event Action<Exception>? OnCriticalError;
 }
