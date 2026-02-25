@@ -9,12 +9,12 @@ namespace LanLinker.Core.Test;
 internal abstract class Program
 {
     private const string MetadataTyping = "Typing";
-    
+
     public static void Main(string[] args)
     {
         string deviceId = Guid.NewGuid().ToString();
 
-        NetworkMessage networkMessage = new NetworkMessage()
+        NetworkMessage networkMessage = new NetworkMessage
         {
             Header = new MessageHeader
             {

@@ -17,12 +17,12 @@ internal abstract class Program
         {
             DeserializeArguments(args);
         }
-        
+
         IUdpDiscoveryService discoveryService = new UdpDiscoveryService(DeviceId, DeviceName, _userName);
-        
+
         CancellationTokenSource cts = new CancellationTokenSource();
-        
-        discoveryService.OnPeerDiscovered += peer =>
+
+        discoveryService.OnPeerConnected += peer =>
         {
             lock (DiscoveredDevices)
             {
@@ -30,7 +30,7 @@ internal abstract class Program
                 {
                     return;
                 }
-        
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"\n[{DateTime.Now:HH:mm:ss}] New Peer Discovered!");
                 Console.WriteLine($"User:    {peer.UserName}");
@@ -38,24 +38,24 @@ internal abstract class Program
                 Console.ResetColor();
             }
         };
-        
-        discoveryService.OnCriticalError += (ex) =>
+
+        discoveryService.OnCriticalError += ex =>
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine($"\n[CRITICAL ERROR] {ex.Message}");
             Console.ResetColor();
-        
+
             cts.Cancel();
         };
-        
+
         Console.CancelKeyPress += (_, e) =>
         {
             Console.WriteLine("\n\n[System] Stopping requested...");
-        
+
             e.Cancel = true;
             cts.Cancel();
         };
-        
+
         try
         {
             await discoveryService.StartAsync(cts.Token);
@@ -75,7 +75,7 @@ internal abstract class Program
             Console.WriteLine("[System] Cleaning up resources...");
             await discoveryService.StopAsync(CancellationToken.None);
         }
-        
+
         Console.WriteLine("[System] Exited.");
         Console.ResetColor();
     }

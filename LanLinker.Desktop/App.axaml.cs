@@ -1,15 +1,14 @@
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
-using System.Linq;
 using Avalonia.Markup.Xaml;
 using LanLinker.Desktop.ViewModels;
 using LanLinker.Desktop.Views;
 
 namespace LanLinker.Desktop;
 
-public partial class App : Application
+public class App : Application
 {
     public override void Initialize()
     {

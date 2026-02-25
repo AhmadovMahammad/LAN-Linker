@@ -12,11 +12,10 @@ namespace LanLinker.Network.Services;
 public class UdpDiscoveryService(string deviceId, string deviceName, string userName, int port = 5000)
     : IUdpDiscoveryService
 {
-    private UdpClient? _udpListener;
-    private UdpClient? _udpBroadcaster;
-
     private readonly IPEndPoint _broadcastEndpoint = new IPEndPoint(IPAddress.Broadcast, port);
     private readonly IPEndPoint _listerEndpoint = new IPEndPoint(IPAddress.Any, port);
+    private UdpClient? _udpBroadcaster;
+    private UdpClient? _udpListener;
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -38,8 +37,14 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         _udpListener?.Dispose();
         _udpBroadcaster?.Dispose();
 
+        OnPeerDisconnected?.Invoke(Guid.Empty);
+
         return Task.CompletedTask;
     }
+
+    public event Action<Peer>? OnPeerConnected;
+    public event Action<Guid>? OnPeerDisconnected;
+    public event Action<Exception>? OnCriticalError;
 
     private async Task StartBroadcastingLoop(CancellationToken cancellationToken)
     {
@@ -57,7 +62,7 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
                     Console.WriteLine($"[{DateTime.UtcNow}] announcement message sent.");
                 }
 
-                await Task.Delay(AppSettings.AnnouncementIntervalMilliSeconds, cancellationToken);
+                await Task.Delay(AppSettings.AnnouncementIntervalTime, cancellationToken);
             }
         }
         catch (OperationCanceledException)
@@ -80,9 +85,9 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
                 {
                     continue;
                 }
-                
+
                 UdpReceiveResult udpReceiveResult = await _udpListener.ReceiveAsync(cancellationToken);
-                
+
                 HandleReceivedBytes(udpReceiveResult.Buffer, udpReceiveResult.RemoteEndPoint);
             }
         }
@@ -121,7 +126,7 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
                     LastSeenAt = DateTime.UtcNow
                 };
 
-                OnPeerDiscovered?.Invoke(peer);
+                OnPeerConnected?.Invoke(peer);
             }
         }
         catch (Exception e)
@@ -149,7 +154,4 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
             }
         };
     }
-
-    public event Action<Peer>? OnPeerDiscovered;
-    public event Action<Exception>? OnCriticalError;
 }

@@ -13,7 +13,7 @@ public class Peer
 
     public bool IsAlive()
     {
-        return LastSeenAt.AddSeconds(AppSettings.PeerTimeoutSeconds) > DateTime.UtcNow;
+        return LastSeenAt.AddSeconds(AppSettings.PeerTimeout.Seconds) > DateTime.UtcNow;
     }
 
     public void UpdateLastSeenAt()

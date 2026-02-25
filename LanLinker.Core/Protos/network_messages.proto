@@ -9,10 +9,9 @@ option csharp_namespace = "LanLinker.Core.Protos";
 message NetworkMessage {
   MessageHeader header = 1;
   oneof payload {
-    PeerDiscoveryMessage peer_discovery = 2;
-    PeerAnnouncementMessage peer_announcement = 3;
-    UserActivityMessage user_activity = 4;
-    HeartbeatMessage heartbeat = 5;
+    PeerAnnouncementMessage peer_announcement = 2;
+    UserActivityMessage user_activity = 3;
+    HeartbeatMessage heartbeat = 4;
   }
 }
 
@@ -32,16 +31,11 @@ message MessageHeader {
   google.protobuf.Timestamp timestamp = 5;
 }
 
-message PeerDiscoveryMessage {
-  string device_name = 2;
-  string user_name = 3;
-  string network_interface = 4;
-  int32 port = 5;
-}
-
 message PeerAnnouncementMessage {
-  string device_name = 2;
-  string user_name = 3;
+  string device_name = 1;
+  string user_name = 2;
+  string network_interface = 3;
+  int32 port = 4;
 }
 
 message UserActivityMessage {
