@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-namespace LanLinker.Console;
+﻿namespace LanLinker.Console;
 
 internal abstract class Program
 {
