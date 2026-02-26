@@ -1,4 +1,5 @@
 ﻿using LanLinker.Core.Interfaces;
+using LanLinker.Core.Models;
 using LanLinker.Network.Services;
 
 namespace LanLinker.Network.Test;
@@ -18,12 +19,16 @@ internal abstract class Program
             DeserializeArguments(args);
         }
 
-        IUdpDiscoveryService discoveryService = new UdpDiscoveryService(DeviceId, DeviceName, _userName);
+        LocalPeerConfig peerConfig = new LocalPeerConfig(DeviceId, DeviceName, _userName);
+
+        IUdpDiscoveryService discoveryService = new UdpDiscoveryService(peerConfig);
 
         CancellationTokenSource cts = new CancellationTokenSource();
 
-        discoveryService.OnPeerConnected += peer =>
+        discoveryService.PeerAnnounced += (_, eventArgs) =>
         {
+            Peer peer = eventArgs.Peer;
+
             lock (DiscoveredDevices)
             {
                 if (!DiscoveredDevices.Add(peer.DeviceId))
@@ -39,10 +44,10 @@ internal abstract class Program
             }
         };
 
-        discoveryService.OnCriticalError += ex =>
+        discoveryService.NetworkError += (_, eventArgs) =>
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine($"\n[CRITICAL ERROR] {ex.Message}");
+            Console.WriteLine($"\n[CRITICAL ERROR] {eventArgs.Context}");
             Console.ResetColor();
 
             cts.Cancel();
@@ -73,7 +78,7 @@ internal abstract class Program
         finally
         {
             Console.WriteLine("[System] Cleaning up resources...");
-            await discoveryService.StopAsync(CancellationToken.None);
+            await discoveryService.StopAsync();
         }
 
         Console.WriteLine("[System] Exited.");

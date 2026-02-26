@@ -3,17 +3,18 @@ using System.Net.Sockets;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using LanLinker.Core;
+using LanLinker.Core.Events;
 using LanLinker.Core.Interfaces;
 using LanLinker.Core.Models;
 using LanLinker.Core.Protos;
 
 namespace LanLinker.Network.Services;
 
-public class UdpDiscoveryService(string deviceId, string deviceName, string userName, int port = 5000)
+public class UdpDiscoveryService(LocalPeerConfig config)
     : IUdpDiscoveryService
 {
-    private readonly IPEndPoint _broadcastEndpoint = new IPEndPoint(IPAddress.Broadcast, port);
-    private readonly IPEndPoint _listerEndpoint = new IPEndPoint(IPAddress.Any, port);
+    private readonly IPEndPoint _broadcastEndpoint = new(IPAddress.Broadcast, config.Port);
+    private readonly IPEndPoint _listerEndpoint = new(IPAddress.Any, config.Port);
     private UdpClient? _udpBroadcaster;
     private UdpClient? _udpListener;
 
@@ -32,19 +33,16 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         return Task.CompletedTask;
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync()
     {
         _udpListener?.Dispose();
         _udpBroadcaster?.Dispose();
 
-        OnPeerDisconnected?.Invoke(Guid.Empty);
-
         return Task.CompletedTask;
     }
 
-    public event Action<Peer>? OnPeerConnected;
-    public event Action<Guid>? OnPeerDisconnected;
-    public event Action<Exception>? OnCriticalError;
+    public event EventHandler<PeerEventArgs>? PeerAnnounced;
+    public event EventHandler<NetworkErrorEventArgs>? NetworkError;
 
     private async Task StartBroadcastingLoop(CancellationToken cancellationToken)
     {
@@ -68,10 +66,10 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         catch (OperationCanceledException)
         {
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            Console.WriteLine($"[UDP Broadcaster Error] {e.Message}");
-            OnCriticalError?.Invoke(e);
+            Console.WriteLine($"[UDP Broadcaster Error] {exception.Message}");
+            NetworkError?.Invoke(this, new NetworkErrorEventArgs(exception, exception.Message));
         }
     }
 
@@ -94,10 +92,10 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         catch (OperationCanceledException)
         {
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            Console.WriteLine($"[UDP Listener Error] {e.Message}");
-            OnCriticalError?.Invoke(e);
+            Console.WriteLine($"[UDP Listener Error] {exception.Message}");
+            NetworkError?.Invoke(this, new NetworkErrorEventArgs(exception, exception.Message));
         }
     }
 
@@ -107,27 +105,30 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
         {
             NetworkMessage networkMessage = NetworkMessage.Parser.ParseFrom(buffer);
 
-            if (networkMessage.Header.DeviceId == Guid.Empty.ToString() || networkMessage.Header.DeviceId == deviceId)
+            if (networkMessage.Header.DeviceId == Guid.Empty.ToString() ||
+                networkMessage.Header.DeviceId == config.DeviceId)
             {
                 return;
             }
 
-            if (networkMessage.PayloadCase == NetworkMessage.PayloadOneofCase.PeerAnnouncement)
+            if (networkMessage.PayloadCase != NetworkMessage.PayloadOneofCase.PeerAnnouncement)
             {
-                PeerAnnouncementMessage? payload = networkMessage.PeerAnnouncement;
-
-                Peer peer = new Peer
-                {
-                    DeviceId = networkMessage.Header.DeviceId,
-                    DeviceName = payload.DeviceName,
-                    UserName = payload.UserName,
-                    IpAddress = remoteEndPoint.Address.ToString(),
-                    Port = port,
-                    LastSeenAt = DateTime.UtcNow
-                };
-
-                OnPeerConnected?.Invoke(peer);
+                return;
             }
+
+            PeerAnnouncementMessage? payload = networkMessage.PeerAnnouncement;
+
+            Peer peer = new Peer
+            {
+                DeviceId = networkMessage.Header.DeviceId,
+                DeviceName = payload.DeviceName,
+                UserName = payload.UserName,
+                IpAddress = remoteEndPoint.Address.ToString(),
+                Port = config.Port,
+                LastSeenAt = DateTime.UtcNow
+            };
+
+            PeerAnnounced?.Invoke(this, new PeerEventArgs(peer));
         }
         catch (Exception e)
         {
@@ -142,15 +143,15 @@ public class UdpDiscoveryService(string deviceId, string deviceName, string user
             Header = new MessageHeader
             {
                 MessageId = Guid.NewGuid().ToString(),
-                DeviceId = deviceId,
+                DeviceId = config.DeviceId,
                 RecipientDeviceId = string.Empty,
                 MessageType = MessageType.PeerAnnouncement,
                 Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
             },
             PeerAnnouncement = new PeerAnnouncementMessage
             {
-                DeviceName = deviceName,
-                UserName = userName,
+                DeviceName = config.DeviceName,
+                UserName = config.UserName,
             }
         };
     }

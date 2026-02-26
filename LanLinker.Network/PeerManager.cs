@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using LanLinker.Core;
+using LanLinker.Core.Events;
 using LanLinker.Core.Models;
 
 namespace LanLinker.Network;
@@ -13,7 +14,7 @@ public class PeerManager : IDisposable
     public PeerManager(string localDeviceId)
     {
         _localDeviceId = localDeviceId;
-        _cleanupTimer = new Timer(CleanupStalePeers, null, AppSettings.CleanupDueTime, AppSettings.CleanupDueTime);
+        _cleanupTimer = new Timer(CleanupStalePeers, null, AppSettings.CleanupDueTime, AppSettings.CleanupPeriodTime);
     }
 
     public void Dispose()
@@ -21,8 +22,8 @@ public class PeerManager : IDisposable
         _cleanupTimer.Dispose();
     }
 
-    public event Action<Peer>? PeerConnected;
-    public event Action<Peer>? PeerDisconnected;
+    public event EventHandler<PeerEventArgs>? PeerConnected;
+    public event EventHandler<PeerEventArgs>? PeerDisconnected;
 
     public IReadOnlyList<Peer> Peers()
     {
@@ -37,7 +38,7 @@ public class PeerManager : IDisposable
         {
             if (_peers.TryRemove(peer.DeviceId, out var removedPeer))
             {
-                PeerDisconnected?.Invoke(removedPeer);
+                PeerDisconnected?.Invoke(this, new PeerEventArgs(removedPeer));
             }
         }
     }
@@ -63,7 +64,7 @@ public class PeerManager : IDisposable
 
         if (newPeer)
         {
-            PeerConnected?.Invoke(peer);
+            PeerConnected?.Invoke(this, new PeerEventArgs(peer));
         }
     }
 }

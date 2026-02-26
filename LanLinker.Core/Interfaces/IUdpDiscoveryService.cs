@@ -1,13 +1,12 @@
-using LanLinker.Core.Models;
+using LanLinker.Core.Events;
 
 namespace LanLinker.Core.Interfaces;
 
 public interface IUdpDiscoveryService
 {
     Task StartAsync(CancellationToken cancellationToken);
-    Task StopAsync(CancellationToken cancellationToken);
+    Task StopAsync();
 
-    event Action<Peer> OnPeerConnected;
-    event Action<Guid> OnPeerDisconnected;
-    event Action<Exception> OnCriticalError;
+    event EventHandler<PeerEventArgs> PeerAnnounced;
+    event EventHandler<NetworkErrorEventArgs> NetworkError;
 }
