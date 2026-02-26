@@ -10,8 +10,7 @@ using LanLinker.Core.Protos;
 
 namespace LanLinker.Network.Services;
 
-public class UdpDiscoveryService(LocalPeerConfig config)
-    : IUdpDiscoveryService
+public class UdpDiscoveryService(LocalPeerConfig config) : IUdpDiscoveryService
 {
     private readonly IPEndPoint _broadcastEndpoint = new(IPAddress.Broadcast, config.Port);
     private readonly IPEndPoint _listerEndpoint = new(IPAddress.Any, config.Port);
@@ -56,7 +55,11 @@ public class UdpDiscoveryService(LocalPeerConfig config)
 
                 if (_udpBroadcaster != null)
                 {
+                    // To test NetworkErrorOccurred Event is caught or not.
+
                     await _udpBroadcaster.SendAsync(messageBytes, _broadcastEndpoint, cancellationToken);
+                    // await _udpBroadcaster.SendAsync(messageBytes, cancellationToken);
+
                     Console.WriteLine($"[{DateTime.UtcNow}] announcement message sent.");
                 }
 
@@ -68,7 +71,6 @@ public class UdpDiscoveryService(LocalPeerConfig config)
         }
         catch (Exception exception)
         {
-            Console.WriteLine($"[UDP Broadcaster Error] {exception.Message}");
             NetworkError?.Invoke(this, new NetworkErrorEventArgs(exception, exception.Message));
         }
     }
@@ -94,7 +96,6 @@ public class UdpDiscoveryService(LocalPeerConfig config)
         }
         catch (Exception exception)
         {
-            Console.WriteLine($"[UDP Listener Error] {exception.Message}");
             NetworkError?.Invoke(this, new NetworkErrorEventArgs(exception, exception.Message));
         }
     }
@@ -132,7 +133,7 @@ public class UdpDiscoveryService(LocalPeerConfig config)
         }
         catch (Exception e)
         {
-            Console.WriteLine($"[UDP Parse Error] Bad packet received: {e.Message}");
+            NetworkError?.Invoke(this, new NetworkErrorEventArgs(e, "[UDP Parse Error] Bad packet received"));
         }
     }
 

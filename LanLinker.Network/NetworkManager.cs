@@ -41,7 +41,7 @@ public class NetworkManager : IDisposable
         await _udpService.StartAsync(cancellationToken);
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public async Task StopAsync()
     {
         await _udpService.StopAsync();
     }

@@ -1,6 +1,4 @@
-﻿using LanLinker.Core.Interfaces;
-using LanLinker.Core.Models;
-using LanLinker.Network.Services;
+﻿using LanLinker.Core.Models;
 
 namespace LanLinker.Network.Test;
 
@@ -9,8 +7,6 @@ internal abstract class Program
     private static readonly string DeviceId = Guid.NewGuid().ToString();
     private static readonly string DeviceName = Environment.MachineName;
     private static string _userName = "ahmadov.dev";
-
-    private static readonly HashSet<string> DiscoveredDevices = [];
 
     public static async Task Main(string[] args)
     {
@@ -21,37 +17,9 @@ internal abstract class Program
 
         LocalPeerConfig peerConfig = new LocalPeerConfig(DeviceId, DeviceName, _userName);
 
-        IUdpDiscoveryService discoveryService = new UdpDiscoveryService(peerConfig);
+        using NetworkManager networkManager = new NetworkManager(peerConfig);
 
         CancellationTokenSource cts = new CancellationTokenSource();
-
-        discoveryService.PeerAnnounced += (_, eventArgs) =>
-        {
-            Peer peer = eventArgs.Peer;
-
-            lock (DiscoveredDevices)
-            {
-                if (!DiscoveredDevices.Add(peer.DeviceId))
-                {
-                    return;
-                }
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"\n[{DateTime.Now:HH:mm:ss}] New Peer Discovered!");
-                Console.WriteLine($"User:    {peer.UserName}");
-                Console.WriteLine($"Device:  {peer.DeviceName}");
-                Console.ResetColor();
-            }
-        };
-
-        discoveryService.NetworkError += (_, eventArgs) =>
-        {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine($"\n[CRITICAL ERROR] {eventArgs.Context}");
-            Console.ResetColor();
-
-            cts.Cancel();
-        };
 
         Console.CancelKeyPress += (_, e) =>
         {
@@ -61,9 +29,36 @@ internal abstract class Program
             cts.Cancel();
         };
 
+        networkManager.PeerConnected += (_, eventArgs) =>
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"\n[{DateTime.Now:HH:mm:ss}] New Peer Discovered!");
+            Console.WriteLine($"User:    {eventArgs.Peer.UserName}");
+            Console.WriteLine($"Device:  {eventArgs.Peer.DeviceName}");
+            Console.ResetColor();
+        };
+
+        networkManager.PeerDisconnected += (_, eventArgs) =>
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"\n[{DateTime.Now:HH:mm:ss}] Peer Disconnected!");
+            Console.WriteLine($"User:    {eventArgs.Peer.UserName}");
+            Console.WriteLine($"Device:  {eventArgs.Peer.DeviceName}");
+            Console.ResetColor();
+        };
+
+        networkManager.NetworkError += (_, eventArgs) =>
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine($"\n[CRITICAL ERROR] {eventArgs.Context}");
+            Console.ResetColor();
+
+            cts.Cancel();
+        };
+
         try
         {
-            await discoveryService.StartAsync(cts.Token);
+            await networkManager.StartAsync(cts.Token);
             await Task.Delay(-1, cts.Token);
         }
         catch (TaskCanceledException)
@@ -78,11 +73,8 @@ internal abstract class Program
         finally
         {
             Console.WriteLine("[System] Cleaning up resources...");
-            await discoveryService.StopAsync();
+            await networkManager.StopAsync();
         }
-
-        Console.WriteLine("[System] Exited.");
-        Console.ResetColor();
     }
 
     private static void DeserializeArguments(string[] args)

@@ -52,15 +52,17 @@ public class PeerManager : IDisposable
 
         bool newPeer = !_peers.ContainsKey(peer.DeviceId);
 
-        _peers.AddOrUpdate(
-            peer.DeviceId,
-            peer,
-            (_, existingPeer) =>
-            {
-                existingPeer.UpdateLastSeenAt();
-                existingPeer.IpAddress = peer.IpAddress;
-                return existingPeer;
-            });
+        lock (_peers)
+        {
+            _peers.AddOrUpdate(peer.DeviceId,
+                peer,
+                (_, existingPeer) =>
+                {
+                    existingPeer.UpdateLastSeenAt();
+                    existingPeer.IpAddress = peer.IpAddress;
+                    return existingPeer;
+                });
+        }
 
         if (newPeer)
         {
