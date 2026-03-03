@@ -15,9 +15,9 @@ internal abstract class Program
             DeserializeArguments(args);
         }
 
-        LocalPeerConfig peerConfig = new LocalPeerConfig(DeviceId, DeviceName, _userName);
+        Identity identity = new Identity(_userName, DeviceName, DeviceId);
 
-        using NetworkManager networkManager = new NetworkManager(peerConfig);
+        using NetworkManager networkManager = new NetworkManager(identity);
 
         CancellationTokenSource cts = new CancellationTokenSource();
 

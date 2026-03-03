@@ -1,5 +1,4 @@
 using LanLinker.Core.Events;
-using LanLinker.Core.Interfaces;
 using LanLinker.Core.Models;
 using LanLinker.Network.Services;
 
@@ -8,23 +7,18 @@ namespace LanLinker.Network;
 public class NetworkManager : IDisposable
 {
     private readonly PeerManager _peerManager;
-    private readonly IUdpDiscoveryService _udpService;
+    private readonly UdpDiscoveryService _udpService;
 
-    public NetworkManager(LocalPeerConfig config)
+    public NetworkManager(Identity identity)
     {
-        _udpService = new UdpDiscoveryService(config);
-        _peerManager = new PeerManager(config.DeviceId);
+        _udpService = new UdpDiscoveryService(identity);
+        _peerManager = new PeerManager(identity.DeviceId);
 
         _udpService.PeerAnnounced += (_, args) => _peerManager.HandlePeerDiscovery(args.Peer);
 
         _peerManager.PeerConnected += (_, e) => PeerConnected?.Invoke(this, e);
         _peerManager.PeerDisconnected += (_, e) => PeerDisconnected?.Invoke(this, e);
         _udpService.NetworkError += (_, e) => NetworkError?.Invoke(this, e);
-    }
-
-    public IReadOnlyList<Peer> GetActivePeers()
-    {
-        return _peerManager.Peers();
     }
 
     public void Dispose()

@@ -11,4 +11,8 @@
       <PackageReference Include="Spectre.Console" Version="0.54.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\LanLinker.Network\LanLinker.Network.csproj" />
+    </ItemGroup>
+
 </Project>

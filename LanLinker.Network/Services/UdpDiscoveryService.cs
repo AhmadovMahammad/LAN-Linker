@@ -10,10 +10,10 @@ using LanLinker.Core.Protos;
 
 namespace LanLinker.Network.Services;
 
-public class UdpDiscoveryService(LocalPeerConfig config) : IUdpDiscoveryService
+public class UdpDiscoveryService(Identity identity) : IUdpDiscoveryService
 {
-    private readonly IPEndPoint _broadcastEndpoint = new(IPAddress.Broadcast, config.Port);
-    private readonly IPEndPoint _listerEndpoint = new(IPAddress.Any, config.Port);
+    private readonly IPEndPoint _broadcastEndpoint = new(IPAddress.Broadcast, 5000);
+    private readonly IPEndPoint _listerEndpoint = new(IPAddress.Any, 5000);
     private UdpClient? _udpBroadcaster;
     private UdpClient? _udpListener;
 
@@ -60,7 +60,7 @@ public class UdpDiscoveryService(LocalPeerConfig config) : IUdpDiscoveryService
                     await _udpBroadcaster.SendAsync(messageBytes, _broadcastEndpoint, cancellationToken);
                     // await _udpBroadcaster.SendAsync(messageBytes, cancellationToken);
 
-                    Console.WriteLine($"[{DateTime.UtcNow}] announcement message sent.");
+                    // Console.WriteLine($"[{DateTime.UtcNow}] announcement message sent.");
                 }
 
                 await Task.Delay(AppSettings.AnnouncementIntervalTime, cancellationToken);
@@ -107,7 +107,7 @@ public class UdpDiscoveryService(LocalPeerConfig config) : IUdpDiscoveryService
             NetworkMessage networkMessage = NetworkMessage.Parser.ParseFrom(buffer);
 
             if (networkMessage.Header.DeviceId == Guid.Empty.ToString() ||
-                networkMessage.Header.DeviceId == config.DeviceId)
+                networkMessage.Header.DeviceId == identity.DeviceId)
             {
                 return;
             }
@@ -125,7 +125,7 @@ public class UdpDiscoveryService(LocalPeerConfig config) : IUdpDiscoveryService
                 DeviceName = payload.DeviceName,
                 UserName = payload.UserName,
                 IpAddress = remoteEndPoint.Address.ToString(),
-                Port = config.Port,
+                Port = 5000,
                 LastSeenAt = DateTime.UtcNow
             };
 
@@ -144,15 +144,15 @@ public class UdpDiscoveryService(LocalPeerConfig config) : IUdpDiscoveryService
             Header = new MessageHeader
             {
                 MessageId = Guid.NewGuid().ToString(),
-                DeviceId = config.DeviceId,
+                DeviceId = identity.DeviceId,
                 RecipientDeviceId = string.Empty,
                 MessageType = MessageType.PeerAnnouncement,
                 Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
             },
             PeerAnnouncement = new PeerAnnouncementMessage
             {
-                DeviceName = config.DeviceName,
-                UserName = config.UserName,
+                DeviceName = identity.DeviceName,
+                UserName = identity.UserName,
             }
         };
     }

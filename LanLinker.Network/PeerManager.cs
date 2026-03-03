@@ -25,11 +25,6 @@ public class PeerManager : IDisposable
     public event EventHandler<PeerEventArgs>? PeerConnected;
     public event EventHandler<PeerEventArgs>? PeerDisconnected;
 
-    public IReadOnlyList<Peer> Peers()
-    {
-        return _peers.Values.ToList();
-    }
-
     private void CleanupStalePeers(object? state)
     {
         List<Peer> stalePeers = _peers.Values.Where(p => !p.IsAlive()).ToList();
@@ -52,17 +47,18 @@ public class PeerManager : IDisposable
 
         bool newPeer = !_peers.ContainsKey(peer.DeviceId);
 
-        lock (_peers)
-        {
-            _peers.AddOrUpdate(peer.DeviceId,
-                peer,
-                (_, existingPeer) =>
-                {
-                    existingPeer.UpdateLastSeenAt();
-                    existingPeer.IpAddress = peer.IpAddress;
-                    return existingPeer;
-                });
-        }
+        _peers.AddOrUpdate(peer.DeviceId,
+            _ =>
+            {
+                peer.ConnectedAt = DateTime.UtcNow;
+                return peer;
+            },
+            (_, existingPeer) =>
+            {
+                existingPeer.UpdateLastSeenAt();
+                existingPeer.IpAddress = peer.IpAddress;
+                return existingPeer;
+            });
 
         if (newPeer)
         {
