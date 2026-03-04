@@ -12,9 +12,11 @@ internal static class LanLinkerApp
 
         using NetworkManager networkManager = new NetworkManager(identity);
 
-        AppLayout layout = new AppLayout();
-
         CancellationTokenSource cts = new CancellationTokenSource();
+
+        AppLayout layout = new AppLayout(networkManager.Peers);
+
+        layout.QuitRequested += () => cts.Cancel();
 
         System.Console.CancelKeyPress += (_, e) =>
         {
@@ -22,11 +24,11 @@ internal static class LanLinkerApp
             cts.Cancel();
         };
 
-        networkManager.PeerConnected += (_, e) => layout.AddPeer(e.Peer);
-        networkManager.PeerDisconnected += (_, e) => layout.RemovePeer(e.Peer);
         networkManager.NetworkError += (_, e) => layout.ReportError(e.Context);
 
-        // layout.MessageSubmitted += message => networkManager.SendMessageAsync(message, cts.Token);
+        networkManager.PeerConnected += (_, e) => layout.AddPeerConnected(e.Peer);
+
+        networkManager.PeerDisconnected += (_, e) => layout.AddPeerDisconnected(e.Peer);
 
         await networkManager.StartAsync(cts.Token);
 

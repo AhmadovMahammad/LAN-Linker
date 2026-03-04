@@ -21,6 +21,8 @@ public class NetworkManager : IDisposable
         _udpService.NetworkError += (_, e) => NetworkError?.Invoke(this, e);
     }
 
+    public IReadOnlyDictionary<string, Peer> Peers => _peerManager.Peers;
+
     public void Dispose()
     {
         _peerManager.Dispose();

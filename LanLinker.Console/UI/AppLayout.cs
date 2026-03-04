@@ -1,31 +1,51 @@
-using System.Collections.Concurrent;
+using System.Threading.Channels;
 using LanLinker.Core.Models;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
 namespace LanLinker.Console.UI;
 
-internal sealed class AppLayout()
+internal sealed class AppLayout
 {
-    private readonly ConcurrentDictionary<string, Peer> _peers = new();
+    private readonly CommandsManager _commandsManager;
     private readonly InputHandler _inputHandler = new();
-    private string? _errorMessage;
+    private readonly List<IRenderable> _messages =
+    [
+        new Markup($"[{Theme.Dim}]  type /help for commands[/]")
+    ];
 
-    public event Action<string>? MessageSubmitted;
+    private readonly object _messagesLock = new();
+    private readonly Channel<bool> _refreshChannel = Channel.CreateBounded<bool>
+    (
+        new BoundedChannelOptions(1)
+        {
+            FullMode = BoundedChannelFullMode.DropWrite
+        }
+    );
 
-    public void AddPeer(Peer peer)
+    public AppLayout(IReadOnlyDictionary<string, Peer> peers)
     {
-        _peers[peer.DeviceId] = peer;
+        _commandsManager = new CommandsManager(peers, AppendMessage, () => QuitRequested?.Invoke());
+        _inputHandler.BufferChanged += SignalRefresh;
+        _inputHandler.Submitted += HandleInput;
     }
 
-    public void RemovePeer(Peer peer)
+    public event Action<string>? MessageSubmitted;
+    public event Action? QuitRequested;
+
+    public void AddPeerConnected(Peer peer)
     {
-        _peers.TryRemove(peer.DeviceId, out _);
+        AppendMessage(new Markup($"[{Theme.Dim}]● {Markup.Escape(peer.UserName)} joined[/]"));
+    }
+
+    public void AddPeerDisconnected(Peer peer)
+    {
+        AppendMessage(new Markup($"[{Theme.Dim}]○ {Markup.Escape(peer.UserName)} left[/]"));
     }
 
     public void ReportError(string message)
     {
-        _errorMessage = message;
+        AppendMessage(new Markup($"[red]! {Markup.Escape(message)}[/]"));
     }
 
     public async Task RunAsync(CancellationToken cancellationToken)
@@ -36,20 +56,21 @@ internal sealed class AppLayout()
 
             await AnsiConsole.Live(Render()).StartAsync(async ctx =>
             {
+                SignalRefresh();
+
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    ctx.UpdateTarget(Render());
-
-                    ctx.Refresh();
-
                     try
                     {
-                        await Task.Delay(100, cancellationToken);
+                        await _refreshChannel.Reader.ReadAsync(cancellationToken);
                     }
                     catch (OperationCanceledException)
                     {
                         break;
                     }
+
+                    ctx.UpdateTarget(Render());
+                    ctx.Refresh();
                 }
             });
 
@@ -66,46 +87,55 @@ internal sealed class AppLayout()
         AnsiConsole.WriteLine();
     }
 
+    private void HandleInput(string input)
+    {
+        if (input.StartsWith('/'))
+        {
+            _commandsManager.Execute(input);
+            return;
+        }
+
+        MessageSubmitted?.Invoke(input);
+
+        AppendMessage(new Markup($"[{Theme.Primary}]  you: {Markup.Escape(input)}[/]"));
+    }
+
+    private void AppendMessage(IRenderable renderable)
+    {
+        lock (_messagesLock)
+        {
+            _messages.Add(renderable);
+        }
+
+        SignalRefresh();
+    }
+
+    private void SignalRefresh()
+    {
+        _refreshChannel.Writer.TryWrite(true);
+    }
+
     private IRenderable Render()
     {
-        string separator = new string('-', System.Console.WindowWidth);
+        IRenderable[] snapshot;
 
-        List<Peer> peers = _peers.Values.OrderBy(p => p.ConnectedAt).ToList();
-
-        List<IRenderable> rows =
-        [
-            new Markup($"[{Theme.Dim}]peers {peers.Count} online[/]"),
-            new Text("")
-        ];
-
-        if (peers.Count == 0)
+        lock (_messagesLock)
         {
-            rows.Add(new Markup($"  [{Theme.Dim}]waiting for peers[/]"));
-        }
-        else
-        {
-            foreach (Peer peer in peers)
-            {
-                string name = Markup.Escape(peer.UserName);
-
-                string peerDevice = Markup.Escape(peer.DeviceName);
-
-                rows.Add(new Markup($"  [{Theme.Primary}]{name}[/]  [{Theme.Dim}]{peerDevice}[/]"));
-            }
+            snapshot = _messages.TakeLast(30).ToArray();
         }
 
-        if (!string.IsNullOrWhiteSpace(_errorMessage))
-        {
-            rows.Add(new Text(""));
-            rows.Add(new Markup($"[{Theme.Dim}]! {Markup.Escape(_errorMessage)}[/]"));
-        }
+        Panel messagePanel = new Panel(new Rows(snapshot))
+            .Header($"[{Theme.Dim}] lan-linker [/]")
+            .Border(BoxBorder.Rounded)
+            .BorderStyle(new Style(Color.Grey35))
+            .Expand();
 
-        rows.Add(new Text(""));
+        Panel inputPanel = new Panel(
+                new Markup($"[{Theme.Dim}]>[/] [{Theme.Primary}]{Markup.Escape(_inputHandler.CurrentBuffer)}[/]"))
+            .Border(BoxBorder.Rounded)
+            .BorderStyle(new Style(Color.Grey35))
+            .Expand();
 
-        rows.Add(new Markup($"[{Theme.Dim}]{separator}[/]"));
-
-        rows.Add(new Markup($"[{Theme.Dim}]>[/] [{Theme.Primary}]{Markup.Escape(_inputHandler.CurrentBuffer)}[/]"));
-
-        return new Rows(rows);
+        return new Rows(messagePanel, inputPanel);
     }
 }

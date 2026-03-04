@@ -4,8 +4,8 @@ namespace LanLinker.Console.UI;
 
 internal sealed class InputHandler : IDisposable
 {
-    private readonly object _lock = new();
     private readonly StringBuilder _buffer = new();
+    private readonly object _lock = new();
     private bool _disposed;
 
     public string CurrentBuffer
@@ -19,7 +19,11 @@ internal sealed class InputHandler : IDisposable
         }
     }
 
-    public event Action<string>? MessageSubmitted;
+    public void Dispose() => _disposed = true;
+
+    public event Action? BufferChanged;
+    
+    public event Action<string>? Submitted;
 
     public void Run(CancellationToken cancellationToken)
     {
@@ -35,6 +39,10 @@ internal sealed class InputHandler : IDisposable
 
                 ConsoleKeyInfo key = System.Console.ReadKey(intercept: true);
 
+                string? submitted = null;
+
+                bool changed = false;
+
                 lock (_lock)
                 {
                     switch (key.Key)
@@ -44,6 +52,7 @@ internal sealed class InputHandler : IDisposable
                             if (_buffer.Length > 0)
                             {
                                 _buffer.Remove(_buffer.Length - 1, 1);
+                                changed = true;
                             }
 
                             break;
@@ -51,18 +60,41 @@ internal sealed class InputHandler : IDisposable
 
                         case ConsoleKey.Enter:
                         {
-                            string message = _buffer.ToString().Trim();
+                            string input = _buffer.ToString().Trim();
 
                             _buffer.Clear();
 
-                            if (!string.IsNullOrEmpty(message))
+                            changed = true;
+
+                            if (!string.IsNullOrEmpty(input))
                             {
-                                MessageSubmitted?.Invoke(message);
+                                submitted = input;
+                            }
+
+                            break;
+                        }
+
+                        default:
+                        {
+                            if (key.KeyChar != '\0' && !char.IsControl(key.KeyChar))
+                            {
+                                _buffer.Append(key.KeyChar);
+                                changed = true;
                             }
 
                             break;
                         }
                     }
+                }
+
+                if (changed)
+                {
+                    BufferChanged?.Invoke();
+                }
+
+                if (submitted is not null)
+                {
+                    Submitted?.Invoke(submitted);
                 }
             }
             catch (Exception ex) when (ex is OperationCanceledException or InvalidOperationException)
@@ -71,6 +103,4 @@ internal sealed class InputHandler : IDisposable
             }
         }
     }
-
-    public void Dispose() => _disposed = true;
 }

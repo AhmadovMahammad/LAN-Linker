@@ -17,6 +17,8 @@ public class PeerManager : IDisposable
         _cleanupTimer = new Timer(CleanupStalePeers, null, AppSettings.CleanupDueTime, AppSettings.CleanupPeriodTime);
     }
 
+    public IReadOnlyDictionary<string, Peer> Peers => _peers;
+
     public void Dispose()
     {
         _cleanupTimer.Dispose();
