@@ -1,4 +1,5 @@
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using LanLinker.Core.Events;
 using LanLinker.Core.Interfaces;
 using LanLinker.Core.Models;
@@ -21,9 +22,11 @@ public class GlobalChatService : IGlobalChatService
         _udpBroadcastService.MessageReceived += (_, args) => HandleReceivedBytes(args.Buffer);
     }
 
-    public async Task SendGlobalMessageAsync(NetworkMessage netMessage)
+    public async Task SendGlobalMessageAsync(string message)
     {
-        await _udpBroadcastService.SendAsync(netMessage.ToByteArray());
+        NetworkMessage networkMessage = CreateUserActivityMessage(message);
+
+        await _udpBroadcastService.SendAsync(networkMessage.ToByteArray());
     }
 
     public event EventHandler<GlobalChatMessageEventArgs>? GlobalMessageReceived;
@@ -58,5 +61,24 @@ public class GlobalChatService : IGlobalChatService
         {
             // malformed packets are silently dropped
         }
+    }
+
+    private NetworkMessage CreateUserActivityMessage(string message)
+    {
+        return new NetworkMessage
+        {
+            Header = new MessageHeader
+            {
+                MessageId = Guid.NewGuid().ToString(),
+                DeviceId = _identity.DeviceId,
+                RecipientDeviceId = string.Empty,
+                MessageType = MessageType.UserActivity,
+                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
+            },
+            UserActivity = new UserActivityMessage
+            {
+                UserMessage = message
+            }
+        };
     }
 }

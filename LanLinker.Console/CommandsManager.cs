@@ -9,6 +9,7 @@ namespace LanLinker.Console;
 internal sealed class CommandsManager
 {
     private readonly Action<IRenderable> _appendMessage;
+    
     private readonly List<ICommand> _commands;
 
     public CommandsManager(

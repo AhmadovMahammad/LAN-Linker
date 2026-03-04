@@ -8,6 +8,7 @@ namespace LanLinker.Console.UI;
 internal sealed class AppLayout
 {
     private readonly CommandsManager _commandsManager;
+    
     private readonly InputHandler _inputHandler = new();
 
     private readonly List<IRenderable> _messages =
@@ -33,6 +34,7 @@ internal sealed class AppLayout
     }
 
     public event Action<string>? MessageSubmitted;
+    
     public event Action? QuitRequested;
 
     public void AddPeerConnected(Peer peer)
@@ -47,7 +49,8 @@ internal sealed class AppLayout
 
     public void AddGlobalMessage(string senderName, string message)
     {
-        AppendMessage(new Markup($"[{Theme.Muted}]  {Markup.Escape(senderName)}:[/] [{Theme.Primary}]{Markup.Escape(message)}[/]"));
+        AppendMessage(new Markup(
+            $"[{Theme.Muted}]  {Markup.Escape(senderName)}:[/] [{Theme.Primary}]{Markup.Escape(message)}[/]"));
     }
 
     public void ReportError(string message)
@@ -75,6 +78,11 @@ internal sealed class AppLayout
                     {
                         break;
                     }
+                    finally
+                    {
+                        ctx.UpdateTarget(Render());
+                        ctx.Refresh();
+                    }
 
                     ctx.UpdateTarget(Render());
                     ctx.Refresh();
@@ -91,6 +99,7 @@ internal sealed class AppLayout
         }
 
         AnsiConsole.MarkupLine($"[{Theme.Dim}]stopped.[/]");
+        
         AnsiConsole.WriteLine();
     }
 

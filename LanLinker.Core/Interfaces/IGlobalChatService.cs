@@ -1,11 +1,10 @@
 ﻿using LanLinker.Core.Events;
-using LanLinker.Core.Protos;
 
 namespace LanLinker.Core.Interfaces;
 
 public interface IGlobalChatService
 {
-    Task SendGlobalMessageAsync(NetworkMessage netMessage);
+    Task SendGlobalMessageAsync(string message);
 
     event EventHandler<GlobalChatMessageEventArgs> GlobalMessageReceived;
 }

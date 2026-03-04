@@ -9,8 +9,6 @@ public class NetworkManager : IDisposable
 {
     private readonly IDiscoveryService _discoveryService;
 
-    private readonly IGlobalChatService _globalChatService;
-
     private readonly PeerManager _peerManager;
 
     private readonly IUdpBroadcastService _udpBroadcastService;
@@ -27,11 +25,13 @@ public class NetworkManager : IDisposable
         _discoveryService = new DiscoveryService(identity, _udpBroadcastService);
         _discoveryService.PeerAnnounced += (_, args) => _peerManager.HandlePeerDiscovery(args.Peer);
 
-        _globalChatService = new GlobalChatService(identity, _udpBroadcastService);
-        _globalChatService.GlobalMessageReceived += (_, e) => GlobalMessageReceived?.Invoke(this, e);
+        GlobalChatService = new GlobalChatService(identity, _udpBroadcastService);
+        GlobalChatService.GlobalMessageReceived += (_, e) => GlobalMessageReceived?.Invoke(this, e);
     }
 
     public IReadOnlyDictionary<string, Peer> Peers => _peerManager.Peers;
+
+    public IGlobalChatService GlobalChatService { get; }
 
     public void Dispose()
     {

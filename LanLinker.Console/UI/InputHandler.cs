@@ -5,7 +5,9 @@ namespace LanLinker.Console.UI;
 internal sealed class InputHandler : IDisposable
 {
     private readonly StringBuilder _buffer = new();
+    
     private readonly object _lock = new();
+    
     private bool _disposed;
 
     public string CurrentBuffer

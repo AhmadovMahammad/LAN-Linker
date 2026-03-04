@@ -15,6 +15,8 @@ public class UdpBroadcastService : IUdpBroadcastService
 
     private UdpClient? _udpListener;
 
+    private Task _listeningTask = Task.CompletedTask;
+
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _udpListener = new UdpClient();
@@ -27,18 +29,18 @@ public class UdpBroadcastService : IUdpBroadcastService
 
         _udpBroadcaster.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
 
-        _ = Task.Run(() => StartListeningLoop(cancellationToken), cancellationToken);
+        _listeningTask = Task.Run(() => StartListeningLoop(cancellationToken), cancellationToken);
 
         return Task.CompletedTask;
     }
 
-    public Task StopAsync()
+    public async Task StopAsync()
     {
+        await _listeningTask;
+
         _udpListener?.Dispose();
 
         _udpBroadcaster?.Dispose();
-
-        return Task.CompletedTask;
     }
 
     public async Task SendAsync(byte[] data)
@@ -70,12 +72,7 @@ public class UdpBroadcastService : IUdpBroadcastService
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                if (_udpListener == null)
-                {
-                    continue;
-                }
-
-                UdpReceiveResult udpReceiveResult = await _udpListener.ReceiveAsync(cancellationToken);
+                UdpReceiveResult udpReceiveResult = await _udpListener!.ReceiveAsync(cancellationToken);
 
                 MessageReceived?.Invoke
                 (

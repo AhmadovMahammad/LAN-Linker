@@ -9,12 +9,23 @@ using LanLinker.Core.Protos;
 
 namespace LanLinker.Network.Services;
 
-public class DiscoveryService(Identity identity, IUdpBroadcastService udpBroadcastService) : IDiscoveryService
+public class DiscoveryService : IDiscoveryService
 {
+    private readonly Identity _identity;
+
+    private readonly IUdpBroadcastService _udpBroadcastService;
+
+    public DiscoveryService(Identity identity, IUdpBroadcastService udpBroadcastService)
+    {
+        _identity = identity;
+        
+        _udpBroadcastService = udpBroadcastService;
+
+        _udpBroadcastService.MessageReceived += (_, args) => HandleReceivedBytes(args.Buffer, args.IpEndPoint);
+    }
+
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        udpBroadcastService.MessageReceived += (_, args) => HandleReceivedBytes(args.Buffer, args.IpEndPoint);
-
         _ = Task.Run(() => StartBroadcastingLoop(cancellationToken), cancellationToken);
 
         return Task.CompletedTask;
@@ -30,7 +41,7 @@ public class DiscoveryService(Identity identity, IUdpBroadcastService udpBroadca
             {
                 byte[] messageBytes = CreateAnnouncementMessage().ToByteArray();
 
-                await udpBroadcastService.SendAsync(messageBytes);
+                await _udpBroadcastService.SendAsync(messageBytes);
 
                 await Task.Delay(AppSettings.AnnouncementIntervalTime, cancellationToken);
             }
@@ -47,7 +58,7 @@ public class DiscoveryService(Identity identity, IUdpBroadcastService udpBroadca
             NetworkMessage networkMessage = NetworkMessage.Parser.ParseFrom(buffer);
 
             if (networkMessage.Header.DeviceId == Guid.Empty.ToString() ||
-                networkMessage.Header.DeviceId == identity.DeviceId)
+                networkMessage.Header.DeviceId == _identity.DeviceId)
             {
                 return;
             }
@@ -84,15 +95,15 @@ public class DiscoveryService(Identity identity, IUdpBroadcastService udpBroadca
             Header = new MessageHeader
             {
                 MessageId = Guid.NewGuid().ToString(),
-                DeviceId = identity.DeviceId,
+                DeviceId = _identity.DeviceId,
                 RecipientDeviceId = string.Empty,
                 MessageType = MessageType.PeerAnnouncement,
                 Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
             },
             PeerAnnouncement = new PeerAnnouncementMessage
             {
-                DeviceName = identity.DeviceName,
-                UserName = identity.UserName
+                DeviceName = _identity.DeviceName,
+                UserName = _identity.UserName
             }
         };
     }

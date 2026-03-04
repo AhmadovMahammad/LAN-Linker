@@ -10,7 +10,7 @@ internal static class LanLinkerApp
     {
         Identity identity = IdentityPrompt.Collect();
 
-        using NetworkManager networkManager = new NetworkManager(identity);
+        NetworkManager networkManager = new NetworkManager(identity);
 
         CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -18,13 +18,18 @@ internal static class LanLinkerApp
 
         layout.QuitRequested += () => cts.Cancel();
 
+        layout.MessageSubmitted += message => networkManager.GlobalChatService.SendGlobalMessageAsync(message);
+
         System.Console.CancelKeyPress += (_, e) =>
         {
-            e.Cancel = true;
             cts.Cancel();
         };
 
-        networkManager.NetworkError += (_, e) => layout.ReportError(e.Context);
+        networkManager.NetworkError += (_, e) =>
+        {
+            layout.ReportError(e.Context);
+            cts.Cancel();
+        };
 
         networkManager.PeerConnected += (_, e) => layout.AddPeerConnected(e.Peer);
 
@@ -44,5 +49,7 @@ internal static class LanLinkerApp
         await layout.RunAsync(cts.Token);
 
         await networkManager.StopAsync();
+
+        networkManager.Dispose();
     }
 }

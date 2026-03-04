@@ -25,6 +25,7 @@ public class PeerManager : IDisposable
     }
 
     public event EventHandler<PeerEventArgs>? PeerConnected;
+    
     public event EventHandler<PeerEventArgs>? PeerDisconnected;
 
     private void CleanupStalePeers(object? state)
