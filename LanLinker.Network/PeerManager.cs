@@ -31,9 +31,9 @@ public class PeerManager : IDisposable
     {
         List<Peer> stalePeers = _peers.Values.Where(p => !p.IsAlive()).ToList();
 
-        foreach (var peer in stalePeers)
+        foreach (Peer peer in stalePeers)
         {
-            if (_peers.TryRemove(peer.DeviceId, out var removedPeer))
+            if (_peers.TryRemove(peer.DeviceId, out Peer? removedPeer))
             {
                 PeerDisconnected?.Invoke(this, new PeerEventArgs(removedPeer));
             }

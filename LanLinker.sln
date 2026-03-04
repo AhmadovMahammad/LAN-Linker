@@ -7,13 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanLinker.Core", "LanLinker
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanLinker.Console", "LanLinker.Console\LanLinker.Console.csproj", "{F6A0BB38-FF16-4D91-9411-74D11DFEC42C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanLinker.Desktop", "LanLinker.Desktop\LanLinker.Desktop.csproj", "{017C4EDB-0D9D-4031-8522-18ABE4CBCBF2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanLinker.Core.Test", "LanLinker.Core.Test\LanLinker.Core.Test.csproj", "{BFC642EB-B349-479E-8155-21763BAF8CF8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanLinker.Network", "LanLinker.Network\LanLinker.Network.csproj", "{77108FD4-A046-4F27-B008-49D5D0386454}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanLinker.Network.Test", "LanLinker.Network.Test\LanLinker.Network.Test.csproj", "{328783E7-DE81-4C39-9569-CA832471EB0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,21 +26,9 @@ Global
 		{F6A0BB38-FF16-4D91-9411-74D11DFEC42C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6A0BB38-FF16-4D91-9411-74D11DFEC42C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6A0BB38-FF16-4D91-9411-74D11DFEC42C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{017C4EDB-0D9D-4031-8522-18ABE4CBCBF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{017C4EDB-0D9D-4031-8522-18ABE4CBCBF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{017C4EDB-0D9D-4031-8522-18ABE4CBCBF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{017C4EDB-0D9D-4031-8522-18ABE4CBCBF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BFC642EB-B349-479E-8155-21763BAF8CF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFC642EB-B349-479E-8155-21763BAF8CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFC642EB-B349-479E-8155-21763BAF8CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BFC642EB-B349-479E-8155-21763BAF8CF8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{77108FD4-A046-4F27-B008-49D5D0386454}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{77108FD4-A046-4F27-B008-49D5D0386454}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77108FD4-A046-4F27-B008-49D5D0386454}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77108FD4-A046-4F27-B008-49D5D0386454}.Release|Any CPU.Build.0 = Release|Any CPU
-		{328783E7-DE81-4C39-9569-CA832471EB0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{328783E7-DE81-4C39-9569-CA832471EB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{328783E7-DE81-4C39-9569-CA832471EB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{328783E7-DE81-4C39-9569-CA832471EB0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

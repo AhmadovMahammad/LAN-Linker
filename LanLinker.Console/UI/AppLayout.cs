@@ -9,12 +9,14 @@ internal sealed class AppLayout
 {
     private readonly CommandsManager _commandsManager;
     private readonly InputHandler _inputHandler = new();
+
     private readonly List<IRenderable> _messages =
     [
         new Markup($"[{Theme.Dim}]  type /help for commands[/]")
     ];
 
     private readonly object _messagesLock = new();
+
     private readonly Channel<bool> _refreshChannel = Channel.CreateBounded<bool>
     (
         new BoundedChannelOptions(1)
@@ -41,6 +43,11 @@ internal sealed class AppLayout
     public void AddPeerDisconnected(Peer peer)
     {
         AppendMessage(new Markup($"[{Theme.Dim}]○ {Markup.Escape(peer.UserName)} left[/]"));
+    }
+
+    public void AddGlobalMessage(string senderName, string message)
+    {
+        AppendMessage(new Markup($"[{Theme.Muted}]  {Markup.Escape(senderName)}:[/] [{Theme.Primary}]{Markup.Escape(message)}[/]"));
     }
 
     public void ReportError(string message)

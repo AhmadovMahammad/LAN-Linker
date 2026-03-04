@@ -30,6 +30,15 @@ internal static class LanLinkerApp
 
         networkManager.PeerDisconnected += (_, e) => layout.AddPeerDisconnected(e.Peer);
 
+        networkManager.GlobalMessageReceived += (_, e) =>
+        {
+            string senderName = networkManager.Peers.TryGetValue(e.SenderDeviceId, out Peer? peer)
+                ? peer.UserName
+                : e.SenderDeviceId;
+
+            layout.AddGlobalMessage(senderName, e.Message.UserMessage);
+        };
+
         await networkManager.StartAsync(cts.Token);
 
         await layout.RunAsync(cts.Token);

@@ -22,7 +22,7 @@ internal sealed class InputHandler : IDisposable
     public void Dispose() => _disposed = true;
 
     public event Action? BufferChanged;
-    
+
     public event Action<string>? Submitted;
 
     public void Run(CancellationToken cancellationToken)
